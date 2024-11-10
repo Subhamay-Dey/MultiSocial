@@ -3,6 +3,7 @@ import React from 'react'
 import { Button } from '../ui/button';
 import { ArrowRightIcon } from 'lucide-react';
 import {motion} from "framer-motion"
+import { Input } from '../ui/input';
 
 export default function HeroSection() {
   
@@ -33,17 +34,13 @@ export default function HeroSection() {
             </div>
           </Button>
       </div>
-      <div className='px-3'>
-      <video
-        className="rounded-xl border-2 border-zinc-600 max-w-[360px] lg:max-w-[800px]"
-        autoPlay
-        loop
-        muted
-        playsInline
-      >
-        <source src="/vid.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+      <div>
+        <Input
+          name='email'
+          type='email'
+          placeholder='Enter your email'
+        />
+
       </div>
     </div>
   );
