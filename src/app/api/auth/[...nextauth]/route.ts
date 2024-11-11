@@ -20,6 +20,22 @@ const authOptions: AuthOptions = {
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET!,
+  callbacks: {
+    async session({ session, user }) {
+      // Add user.id to the session
+      if (session.user) {
+        session.user.id = user.id;
+      }
+      return session;
+    },
+    async jwt({ token, user }) {
+      // Persist the user id in the token right after sign in
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+  },
 };
 
 const handler = NextAuth(authOptions);

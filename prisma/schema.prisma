@@ -17,9 +17,18 @@ model User {
   sessions      Session[]
   // Optional for WebAuthn support
   Authenticator Authenticator[]
-
+  socialProfiles SocialProfile[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model SocialProfile {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId   String   @db.ObjectId
+  platform String
+  url      String
+
+  uer User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Account {

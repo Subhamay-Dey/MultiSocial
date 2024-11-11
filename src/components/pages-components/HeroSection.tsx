@@ -40,7 +40,6 @@ export default function HeroSection() {
           type='email'
           placeholder='Enter your work email'
         />
-
       </div>
     </div>
   );
