@@ -8,7 +8,7 @@ import { Input } from '../ui/input';
 export default function HeroSection() {
   
   return (
-    <div className='min-h-screen w-full flex flex-col items-center justify-center bg-[url("/backgroundGlows/darkVioletGlow.png")] bg-center bg-cover'>
+    <div className='min-h-screen w-full flex flex-col items-center justify-center bg-[url("/backgroundGlows/pinkGlow.png")] bg-center bg-cover'>
       {/* Hero Texts 📝 */}
       <div 
         className='flex flex-col items-center justify-center text-center pt-10'>
@@ -39,6 +39,7 @@ export default function HeroSection() {
           name='email'
           type='email'
           placeholder='Enter your work email'
+          accept='/png, /webp, /jpg, /jpeg, /gif'
         />
       </div>
     </div>

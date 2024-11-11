@@ -3,6 +3,7 @@
 import React from 'react'
 import { useSession } from 'next-auth/react'
 import LinkSocialMedia from '../pages-components/Socials'
+import DisplaySocialProfiles from '../pages-components/DisplaySocialProfiles '
 
 function Dashboard() {
 
@@ -16,6 +17,7 @@ function Dashboard() {
     <div className="container mx-auto p-4 flex flex-col justify-center items-center">
       <h1 className="text-2xl font-bold mb-4">Welcome, {session.user?.name}</h1>
       <LinkSocialMedia />
+      <DisplaySocialProfiles/>
     </div>
   )
 }
