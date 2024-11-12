@@ -5,6 +5,7 @@ import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 
 export async function GET(req: NextRequest) {
+
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user?.id) {
