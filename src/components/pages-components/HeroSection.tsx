@@ -6,7 +6,7 @@ import {motion} from "framer-motion"
 import { Input } from '../ui/input';
 
 export default function HeroSection() {
-  
+
   return (
     <div className='min-h-screen w-full flex flex-col items-center justify-center bg-[url("/backgroundGlows/pinkGlow.png")] bg-center bg-cover'>
       {/* Hero Texts 📝 */}
