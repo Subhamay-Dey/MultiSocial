@@ -20,15 +20,11 @@ function AddPlatform({children}:{children:React.ReactNode}) {
 
   const [platform, setPlatform] = useState('');
   const [url, setUrl] = useState('');
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setMessage(null);
-    setError(null);
 
     try {
       const response = await fetch('/api/social-media', {
@@ -42,26 +38,26 @@ function AddPlatform({children}:{children:React.ReactNode}) {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage(data.message);
         setPlatform('');
         setUrl('');
         toast.success(data.message)
+        setOpen(false)
       } else {
-        setError(data.message || 'Something went wrong.');
         toast.error(data.message)
       }
     } catch (err) {
-      setError('An unexpected error occurred.');
       toast.error("An unexpected error occurred.")
     } finally {
       setLoading(false);
     }
   };
 
+  const [open, setOpen] = useState(false)
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px]" onInteractOutside={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
           <DialogDescription>
