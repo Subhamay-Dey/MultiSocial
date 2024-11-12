@@ -1,4 +1,4 @@
-// app/api/social-profiles/route.ts
+
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     // Fetch linked platforms for the user
     const profiles = await prisma.socialProfile.findMany({
       where: { userId: session.user.id },
-      select: { platform: true },  // Only select the platform field
+      select: { platform: true },
     });
 
     const linkedPlatforms = profiles.map((profile) => profile.platform);

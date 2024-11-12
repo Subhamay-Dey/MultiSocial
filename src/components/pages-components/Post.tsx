@@ -10,6 +10,8 @@ import { format } from "date-fns";
 import { Calendar as CalendarIcon, Facebook, Instagram, Linkedin, Twitter, Plus, Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Switch } from "@/components/ui/switch";
+import AddPlatform from './AddPlatform';
+
 
 function Post() {
   const [date, setDate] = useState<Date>();
@@ -95,10 +97,14 @@ function Post() {
                   </div>
                 </div>
               ))}
-              <Button variant="outline" size="sm" className="gap-1">
-                <Plus className="h-4 w-4" />
-                Add Platform
-              </Button>
+              <AddPlatform
+                children={
+                  <Button variant="outline" size="sm" className="gap-1">
+                    <Plus className="h-4 w-4" />
+                    Add Platform
+                  </Button>
+                }
+              />
             </div>
           </div>
 
