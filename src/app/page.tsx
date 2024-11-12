@@ -5,6 +5,7 @@ import Footer from "@/components/base-components/Footer";
 import Navbar from "@/components/base-components/Navbar";
 import { BentoGridPage } from "@/components/pages-components/BenteogridPage";
 import EmailPage from "@/components/pages-components/Email-Page";
+import Hero from "@/components/pages-components/Hero";
 import HeroSection from "@/components/pages-components/HeroSection";
 import Post from "@/components/pages-components/Post";
 import PricingPage from "@/components/pages-components/Pricing-Page";
@@ -15,8 +16,8 @@ import Particles from "@/components/ui/particles";
 export default function Home() {
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden">
-      <Navbar/>
-      <HeroSection/>
+      {/* <Navbar/> */}
+      <Hero/>
       <Dashboard/>
       <Post/>
       <Particles
