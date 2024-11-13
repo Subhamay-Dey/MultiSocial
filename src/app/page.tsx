@@ -10,7 +10,6 @@ export default function Home() {
     <div className="relative min-h-screen w-full overflow-x-hidden">
       <Navbar/>
       <Hero/>
-      <Dashboard/>
       <Post/>
       <Particles
         className="absolute inset-0"
