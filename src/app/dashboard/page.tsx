@@ -25,17 +25,21 @@ export default function Component() {
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-gray-200 flex flex-col">
         <div className="p-4 border-b border-gray-200">
-          <h1 className="text-xl font-semibold flex items-center gap-2">
-            <Image src="/placeholder.svg" alt="Post Bridge Logo" width={24} height={24} />
-            post bridge
-          </h1>
+          <span className="flex gap-2 items-center">
+            <h2 className="bg-gradient-to-b from-gray-900 via-black to-gray-600 bg-clip-text text-transparent tracking-tighter text-xl font-black text-center">
+              MultiSocial
+            </h2>
+            <Image src="/Multisocials.png" alt="logo" width={24} height={24}/>
+          </span>
         </div>
-        <nav className="flex-1 overflow-y-auto p-4">
-          <button className="w-full bg-purple-500 text-white rounded-md py-2 px-4 flex items-center justify-center gap-2 mb-6">
-            <Plus className="w-5 h-5" />
-            Create post
-          </button>
-          <div className="mb-6">
+        <nav className="flex-1 overflow-y-auto p-6">
+          <div className='border-b border-gray-200'>
+            <button className="w-full bg-purple-500 text-white rounded-md py-2 px-4 flex items-center justify-center gap-2 mb-6">
+              <Plus className="w-5 h-10"/>
+              Create post
+            </button>
+          </div>
+          <div className="my-6">
             <h2 className="text-xs font-semibold text-gray-500 mb-2">Content</h2>
             <ul className="space-y-1">
               <li>
@@ -59,7 +63,7 @@ export default function Component() {
             </ul>
           </div>
           <div>
-            <h2 className="text-xs font-semibold text-gray-500 mb-2">Configuration</h2>
+            <h2 className="text-xs font-semibold text-gray-500 mb-2 border-t border-gray-200 pt-6">Configuration</h2>
             <ul className="space-y-1">
               <li>
                 <Link href="#" className="flex items-center gap-3 text-gray-700 py-2 px-3 rounded-md hover:bg-gray-100">
@@ -109,7 +113,7 @@ export default function Component() {
 
       {/* Main content */}
       <main className="flex-1 overflow-y-auto">
-        <div className="p-6 max-w-4xl mx-auto">
+        <div className="p-6 max-w-6xl mx-auto">
           <div className="bg-purple-100 border border-purple-300 rounded-md p-4 mb-6 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-500" viewBox="0 0 20 20" fill="currentColor">
@@ -124,10 +128,10 @@ export default function Component() {
 
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-semibold mb-6 bg-gradient-to-b from-gray-900 via-black to-gray-600 bg-clip-text text-transparent">Create a post</h2>
-            <div className="flex border-b border-gray-200 mb-6">
+            <div className="flex justify-center items-center border-b border-gray-200 mb-6">
               <button 
                 onClick={() => setActiveTab('single')}
-                className={`pb-2 px-4 font-medium ${
+                className={`pb-2 px-8 font-medium ${
                   activeTab === 'single' 
                     ? 'text-purple-500 border-b-2 border-purple-500' 
                     : 'text-gray-500'
@@ -137,7 +141,7 @@ export default function Component() {
               </button>
               <button 
                 onClick={() => setActiveTab('text')}
-                className={`pb-2 px-4 font-medium ${
+                className={`pb-2 px-8 font-medium ${
                   activeTab === 'text' 
                     ? 'text-purple-500 border-b-2 border-purple-500' 
                     : 'text-gray-500'
@@ -147,7 +151,7 @@ export default function Component() {
               </button>
               <button 
                 onClick={() => setActiveTab('carousel')}
-                className={`pb-2 px-4 font-medium ${
+                className={`pb-2 px-8 font-medium ${
                   activeTab === 'carousel' 
                     ? 'text-purple-500 border-b-2 border-purple-500' 
                     : 'text-gray-500'
