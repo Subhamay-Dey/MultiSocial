@@ -34,14 +34,11 @@ export default function Hero() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8">
             <div className="space-y-1">
-              <h1 className="text-4xl md:text-5xl lg:text-[54px] font-bold bg-gradient-to-b from-black to-gray-800 bg-clip-text text-transparent leading-tight">
+              <h1 className="text-4xl py-2 md:text-5xl lg:text-[54px] font-bold bg-gradient-to-b from-black to-gray-800 bg-clip-text text-transparent leading-tight">
                 Manage All Your Social{" "}
-              </h1>
-              <h1 className="text-4xl md:text-5xl lg:text-[54px] font-bold bg-gradient-to-b from-black to-gray-800 bg-clip-text text-transparent leading-tight">
                 Media Accounts
                 <span className="italic pl-4">in One</span>
-              </h1>
-              <h1 className="text-4xl md:text-5xl lg:text-[54px] font-bold bg-gradient-to-b from-black to-gray-800 bg-clip-text text-transparent leading-tight">
+                {" "}
                 <span className="italic">Place</span>
               </h1>
             </div>
@@ -62,9 +59,14 @@ export default function Hero() {
               ))}
             </ul>
             <div className="space-y-4">
-              <Button className="w-full md:w-auto bg-emerald-500 hover:bg-emerald-600 text-lg py-6 px-8">
-                Try it for free
-              </Button>
+              <div className="w-full md:w-auto">
+                <Button 
+                  onClick={() => signIn()}
+                  className="w-full bg-emerald-500 hover:bg-emerald-600 text-lg py-6 px-8"
+                >
+                  Try it for free
+                </Button>
+              </div>
               <p className="text-sm text-gray-500 text-center md:text-left">
                 No credit card required
               </p>

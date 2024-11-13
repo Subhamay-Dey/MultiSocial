@@ -8,27 +8,28 @@ generator client {
 }
 
 model User {
-  id            String          @id @default(auto()) @map("_id") @db.ObjectId
-  name          String?
-  email         String?         @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  // Optional for WebAuthn support
-  Authenticator Authenticator[]
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  name           String?
+  email          String?         @unique
+  emailVerified  DateTime?
+  image          String?
+  accounts       Account[]
+  sessions       Session[]
+  socialAccounts SocialAccount[]
+  posts          Post[]
+  Authenticator  Authenticator[]
   socialProfiles SocialProfile[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
 }
 
 model SocialProfile {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId   String   @db.ObjectId
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  userId   String @db.ObjectId
   platform String
   url      String
 
-  uer User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Account {
@@ -93,4 +94,27 @@ model BetaUsers {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   email     String   @unique
   createdAt DateTime @default(now())
+}
+
+model SocialAccount {
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  platform         String
+  accessToken      String
+  refreshToken     String?
+  expiresAt        DateTime?
+  userId           String    @db.ObjectId
+  user             User      @relation(fields: [userId], references: [id])
+  platformUserId   String
+  platformUserName String
+}
+
+model Post {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  content      String
+  mediaUrls    String[]
+  platforms    String[]
+  scheduledFor DateTime?
+  status       String
+  userId       String    @db.ObjectId
+  user         User      @relation(fields: [userId], references: [id])
 }
