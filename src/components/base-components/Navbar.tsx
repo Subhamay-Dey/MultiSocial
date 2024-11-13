@@ -77,7 +77,7 @@ export default function Navbar() {
         <h2 className="bg-gradient-to-b from-gray-900 via-black to-gray-600 bg-clip-text text-transparent tracking-tighter text-xl font-black text-center">
           MultiSocial
         </h2>
-        <Image src="/Multisocials.png" alt="logo" className="size-7" />
+        <Image src="/Multisocials.png" alt="logo" width={24} height={24}/>
       </span>
     
     <div className="flex flex-row">
