@@ -6,6 +6,15 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 
+// Types for social platforms
+type SocialPlatform = {
+  name: 'Facebook' | 'Twitter' | 'Instagram' | 'LinkedIn';
+  icon: React.ReactNode;
+  enabled: boolean;
+  apiEndpoint: string;
+}
+
+
 export default function Component() {
   const [activeTab, setActiveTab] = useState('text')
   const [postText, setPostText] = useState('')
@@ -26,7 +35,7 @@ export default function Component() {
       <aside className="fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-gray-200 flex flex-col z-10">
         <div className="p-6 border-b border-gray-200">
         <span className="flex gap-2 items-center">
-        <h2 className="bg-gradient-to-b from-gray-900 via-black to-gray-600 bg-clip-text text-transparent tracking-tighter text-xl font-black text-center pl-8">
+        <h2 className="bg-gradient-to-b from-black to-gray-700 bg-clip-text text-transparent tracking-tighter text-xl font-black text-center pl-8">
           MultiSocial
         </h2>
         <Image src="/Multisocials.png" alt="logo" width={24} height={24}/>
@@ -88,7 +97,7 @@ export default function Component() {
               N
             </div>
             <div>
-              <p className="text-lg font-medium bg-gradient-to-b from-gray-900 via-black to-gray-600 bg-clip-text text-transparent">{session?.user.name}</p>
+              <p className="text-lg font-medium bg-gradient-to-b from-black to-gray-700 bg-clip-text text-transparent">{session?.user.name}</p>
               <p className="text-sm text-gray-500">Free Plan</p>
             </div>
           </div>
@@ -111,7 +120,7 @@ export default function Component() {
           </div>
 
           <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-xl font-semibold mb-6 bg-gradient-to-b from-gray-900 via-black to-gray-600 bg-clip-text text-transparent">Create a post</h2>
+            <h2 className="text-xl font-semibold mb-6 bg-gradient-to-b from-black to-gray-700 bg-clip-text text-transparent">Create a post</h2>
             <div className="flex border-b border-gray-200 mb-6">
               <button 
                 onClick={() => setActiveTab('single')}
@@ -189,7 +198,7 @@ export default function Component() {
 
       {/* Upgrade to premium */}
       <div className="fixed bottom-4 right-4 bg-white rounded-lg shadow-md p-4 w-64 border border-gray-200">
-        <h3 className="font-semibold mb-2 bg-gradient-to-b from-gray-900 via-black to-gray-600 bg-clip-text text-transparent">Upgrade to premium</h3>
+        <h3 className="font-semibold mb-2 bg-gradient-to-b from-black to-gray-700 bg-clip-text text-transparent">Upgrade to premium</h3>
         <p className="text-sm text-gray-600 mb-4">Unlimited posting and scheduling for an unbeatable price.</p>
         <button 
           className="w-full bg-purple-500 text-white rounded-md py-2 px-4 text-sm font-medium"
@@ -204,7 +213,7 @@ export default function Component() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold">Choose Your Plan</h2>
+              <h2 className="text-2xl font-bold bg-gradient-to-b from-black to-gray-700 bg-clip-text text-transparent">Choose Your Plan</h2>
               <button onClick={closePricingPage} className="text-gray-500 hover:text-gray-700">
                 <X className="w-6 h-6" />
                 <span className="sr-only">Close</span>
@@ -213,10 +222,13 @@ export default function Component() {
             <div className="grid md:grid-cols-3 gap-6">
               {['Basic', 'Pro', 'Enterprise'].map((plan) => (
                 <div key={plan} className="border rounded-lg p-6 flex flex-col">
-                  <h3 className="text-xl font-semibold mb-2">{plan}</h3>
-                  <p className="text-gray-600 mb-4">Perfect for {plan.toLowerCase()} users</p>
-                  <p className="text-3xl font-bold mb-4">${plan === 'Basic' ? '9' : plan === 'Pro' ? '29' : '99'}<span className="text-sm font-normal">/month</span></p>
-                  <ul className="mb-6 flex-grow">
+                  <h3 className="text-xl font-semibold mb-2 text-gray-900">{plan}</h3>
+                  <p className="text-gray-800 mb-4">Perfect for {plan.toLowerCase()} users</p>
+                  <p className="text-3xl font-bold mb-4 text-gray-900">
+                    ${plan === 'Basic' ? '9' : plan === 'Pro' ? '19' : '29'}
+                    <span className="text-sm font-normal text-gray-700">/month</span>
+                  </p>
+                  <ul className="mb-6 flex-grow text-gray-800">
                     <li className="flex items-center mb-2">
                       <svg className="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
                       Feature 1
