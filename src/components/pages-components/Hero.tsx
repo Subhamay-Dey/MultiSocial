@@ -5,7 +5,8 @@ import { CheckCircle2, Star } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { AnimatedTooltipPreview } from "./Tooltip"
-import { signIn, signOut, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
+import TryFree from "../sub-components/TryFree"
 
 const CheckIcon = () => (
     <svg
@@ -59,14 +60,21 @@ export default function Hero() {
               ))}
             </ul>
             <div className="space-y-4">
-              <div className="w-full md:w-auto">
+              
+              { session ?  (<Link href={"/dashboard"}>
+              
                 <Button 
-                  onClick={() => signIn()}
-                  className="w-full bg-emerald-500 hover:bg-emerald-600 text-lg py-6 px-8"
+                  className=" bg-emerald-500 hover:bg-emerald-600 text-lg py-6 px-16"
                 >
                   Try it for free
                 </Button>
-              </div>
+              </Link>) : (
+                <TryFree children={<Button 
+                  className=" bg-emerald-500 hover:bg-emerald-600 text-lg py-6 px-16"
+                >
+                  Try it for free
+                </Button>}/>)}
+              
               <p className="text-sm text-gray-500 text-center md:text-left">
                 No credit card required
               </p>

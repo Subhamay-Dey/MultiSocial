@@ -60,7 +60,7 @@ export default function Navbar() {
                   </Button>
                 </NavigationMenuLink>
               </NavigationMenuItem>
-              <NavigationMenuItem>
+              {session ? <NavigationMenuItem>
                 <NavigationMenuLink>
                   <Link href={"/dashboard"}>
                     <Button variant="default" size="lg">
@@ -68,7 +68,7 @@ export default function Navbar() {
                     </Button>
                   </Link>
                 </NavigationMenuLink>
-              </NavigationMenuItem>
+              </NavigationMenuItem> : ""}
             </NavigationMenuList>
           </NavigationMenu>
         </div>
@@ -115,7 +115,7 @@ export default function Navbar() {
                 </span>
               ) : (
                 <Link href={'/login'}>
-                  <Button className="flex lg:hidden" size={'sm'} variant={'secondary'}>Sign In</Button>
+                  <Button className="flex lg:hidden" size={'sm'} variant={'secondary'} onClick={() => signIn()}>Sign In</Button>
                 </Link>
               )}
             </nav>
