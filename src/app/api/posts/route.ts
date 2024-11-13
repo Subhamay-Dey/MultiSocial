@@ -1,4 +1,3 @@
-
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
@@ -13,7 +12,6 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    // Fetch linked platforms for the user
     const profiles = await prisma.socialProfile.findMany({
       where: { userId: session.user.id },
       select: { platform: true },
