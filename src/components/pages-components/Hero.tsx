@@ -29,49 +29,22 @@ const CheckIcon = () => (
 export default function Hero() {
     const { data: session } = useSession()
   return (
-    <div className="min-h-screen bg-white">
-      <header className="border-b">
-        <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <span className="flex gap-2 items-center">
-            <h2 className="bg-gradient-to-b from-gray-900 via-black to-gray-600 bg-clip-text tracking-tighter text-transparent text-2xl font-black text-center">
-            MultiSocial
-            </h2>
-            <img src="/Multisocials.png" alt="logo" className="size-7" />
-        </span>
-          <div className="hidden md:flex items-center gap-6">
-            <Link href="#" className="text-gray-600 hover:text-gray-900">
-              Pricing
-            </Link>
-            <Link href="#" className="text-gray-600 hover:text-gray-900">
-              Reviews
-            </Link>
-            <Link href="#" className="text-gray-600 hover:text-gray-900">
-              Features
-            </Link>
-            <Link href="#" className="text-gray-600 hover:text-gray-900">
-              Platforms
-            </Link>
-            <Link href="#" className="text-gray-600 hover:text-gray-900">
-              FAQ
-            </Link>
-          </div>
-            {session ? 
-                <span className='lg:flex gap-1 hidden'>
-                <img className='size-8 mr-4 rounded-full' src={session?.user?.image!} alt='user pfp'/>
-                <Button size={'sm'} variant={'secondary'} className="bg-red-600 hover:bg-red-700" onClick={() => signOut()}>Sign out</Button>
-                </span> 
-                : 
-                <Link className='lg:flex gap-1 hidden' href={'/login'}><Button className="hidden lg:flex bg-emerald-500 hover:bg-emerald-600"size={'sm'} variant={'secondary'}>Sign In</Button></Link>
-            }
-        </nav>
-      </header>
-      <main className="max-w-7xl mx-auto px-4 py-12 md:py-24">
+    <div className="min-h-screen w-full flex flex-col justify-center items-center bg-white">
+            <main className="max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8">
-            <h1 className="text-4xl md:text-5xl lg:text-[54px] font-bold text-gray-900 leading-tight">
-            Manage All Your Social Media Accounts{" "}
-              <span className="italic">in One Place.</span>
-            </h1>
+            <div className="space-y-1">
+              <h1 className="text-4xl md:text-5xl lg:text-[54px] font-bold bg-gradient-to-b from-black to-gray-800 bg-clip-text text-transparent leading-tight">
+                Manage All Your Social{" "}
+              </h1>
+              <h1 className="text-4xl md:text-5xl lg:text-[54px] font-bold bg-gradient-to-b from-black to-gray-800 bg-clip-text text-transparent leading-tight">
+                Media Accounts
+                <span className="italic pl-4">in One</span>
+              </h1>
+              <h1 className="text-4xl md:text-5xl lg:text-[54px] font-bold bg-gradient-to-b from-black to-gray-800 bg-clip-text text-transparent leading-tight">
+                <span className="italic">Place</span>
+              </h1>
+            </div>
             <p className="text-lg text-gray-600">
               Post and schedule all your content on all your social accounts (all in one place). A useful tool at an actual fair price, that lets you...
             </p>

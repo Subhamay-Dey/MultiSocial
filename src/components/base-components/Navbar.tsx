@@ -74,10 +74,10 @@ export default function Navbar() {
   return (
     <nav className="absolute top-0 py-6 px-6 lg:px-10 flex justify-between items-center w-full z-10">
       <span className="flex gap-2 items-center">
-        <h2 className="bg-gradient-to-b from-gray-900 via-black to-gray-600 bg-clip-text tracking-tighter text-transparent text-xl font-black text-center dark:from-white dark:via-gray-200 dark:to-gray-400">
+        <h2 className="bg-gradient-to-b from-gray-900 via-black to-gray-600 bg-clip-text text-transparent tracking-tighter text-xl font-black text-center">
           MultiSocial
         </h2>
-        <img src="/Multisocials.png" alt="logo" className="size-7" />
+        <Image src="/Multisocials.png" alt="logo" className="size-7" />
       </span>
     
     <div className="flex flex-row">
@@ -113,7 +113,7 @@ export default function Navbar() {
             </NavigationMenuItem>
             <NavigationMenuItem>
               <NavigationMenuLink>
-                <Button variant="ghost" size="lg">
+                <Button variant="default" size="lg">
                   Pricing
                 </Button>
               </NavigationMenuLink>
@@ -121,7 +121,7 @@ export default function Navbar() {
             <NavigationMenuItem>
               <NavigationMenuLink>
                 <Link href={"/dashboard"}>
-                  <Button variant="ghost" size="lg">
+                  <Button variant="default" size="lg">
                     Dashboard
                   </Button>
                 </Link>
@@ -210,9 +210,11 @@ export default function Navbar() {
       {session ? 
         <span className='lg:flex gap-1 hidden'>
         <img className='size-8 mr-4 rounded-full' src={session?.user?.image!} alt='user pfp'/>
-        <Button size={'sm'} variant={'secondary'} onClick={() => signOut()}>Sign out</Button>
+        <Button className="rounded-xl" size={'sm'} variant={'secondary'} onClick={() => signOut()}>Sign out</Button>
         </span> 
-      : <Link className='lg:flex gap-1 hidden' href={'/login'}><Button className="hidden lg:flex"size={'sm'} variant={'secondary'}>Sign In</Button></Link>}
+      : <Link className='lg:flex gap-1 hidden' href={'/login'}>
+          <Button className="hidden lg:flex rounded-xl"size={'sm'} variant={'secondary'}>Sign In</Button>
+        </Link>}
 
     </nav>
   )

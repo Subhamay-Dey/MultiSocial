@@ -16,7 +16,7 @@ import Particles from "@/components/ui/particles";
 export default function Home() {
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden">
-      {/* <Navbar/> */}
+      <Navbar/>
       <Hero/>
       <Dashboard/>
       <Post/>
