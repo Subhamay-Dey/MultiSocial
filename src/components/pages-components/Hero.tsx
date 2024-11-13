@@ -7,6 +7,8 @@ import Link from "next/link"
 import { AnimatedTooltipPreview } from "./Tooltip"
 import { useSession } from 'next-auth/react'
 import TryFree from "../sub-components/TryFree"
+import confetti from "canvas-confetti";
+import { useEffect } from "react"
 
 const CheckIcon = () => (
     <svg
@@ -29,6 +31,43 @@ const CheckIcon = () => (
 
 export default function Hero() {
     const { data: session } = useSession()
+
+    const handleClick = () => {
+      const end = Date.now() + 3 * 1000; // 3 seconds
+      const colors = ["#a786ff", "#fd8bbc", "#eca184", "#f8deb1"];
+  
+      const frame = () => {
+        if (Date.now() > end) return;
+  
+        confetti({
+          particleCount: 2,
+          angle: 60,
+          spread: 55,
+          startVelocity: 60,
+          origin: { x: 0, y: 0.5 },
+          colors: colors,
+        });
+        confetti({
+          particleCount: 2,
+          angle: 120,
+          spread: 55,
+          startVelocity: 60,
+          origin: { x: 1, y: 0.5 },
+          colors: colors,
+        });
+  
+        requestAnimationFrame(frame);
+      };
+  
+      frame();
+    };
+
+    useEffect(() => {
+      if (session) {
+        handleClick(); // Trigger confetti on successful login
+      }
+    }, [session]);
+  
   return (
     <div className="min-h-screen w-full flex flex-col justify-center items-center bg-white">
             <main className="max-w-7xl">

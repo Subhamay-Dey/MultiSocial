@@ -14,6 +14,8 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import { useRef } from "react";
+import confetti from "canvas-confetti";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -113,6 +115,7 @@ export default function Navbar() {
                   <img className='size-8 mr-4 rounded-full' src={session?.user?.image!} alt='user pfp'/>
                   <Button size={'sm'} variant={'secondary'} onClick={() => signOut()}>Sign out</Button>
                 </span>
+                
               ) : (
                 <Link href={'/login'}>
                   <Button className="flex lg:hidden" size={'sm'} variant={'secondary'} onClick={() => signIn()}>Sign In</Button>
