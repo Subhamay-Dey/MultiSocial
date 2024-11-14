@@ -3,8 +3,9 @@
 import { CloudUpload, Clock, FileText, Grid, Menu, Plus, Settings, Users, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useSession } from 'next-auth/react'
+import { IoClose } from "react-icons/io5";
 
 export default function Component() {
   const [activeTab, setActiveTab] = useState('text')
@@ -19,6 +20,29 @@ export default function Component() {
   const closePricingPage = () => {
     setShowPricing(false)
   }
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+
+  const handleClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const objectUrl = URL.createObjectURL(file);
+      setImageUrl(objectUrl);
+    }
+  };
+
+  const handleRemoveImage = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering the div click event when clicking on the remove icon
+    setImageUrl(null); // Remove the image and reset state
+  };
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -168,7 +192,7 @@ export default function Component() {
                     placeholder="Start writing your post here..."
                     value={postText}
                     onChange={(e) => setPostText(e.target.value)}
-                    className="w-full min-h-[200px] p-4 resize-none focus:outline-none"
+                    className="w-full min-h-[200px] p-4 border-2 border-purple-300 hover:border-purple-400 rounded-lg text-black"
                     maxLength={2200}
                   />
                   <div className="absolute bottom-2 right-2 text-sm text-gray-400">
@@ -181,16 +205,54 @@ export default function Component() {
                 </button>
               </div>
             ) : activeTab === 'single' ? (
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 flex flex-col items-center justify-center text-center">
-                <CloudUpload className="w-12 h-12 text-gray-400 mb-4" />
-                <h3 className="text-lg font-semibold mb-1">Click to upload or drag and drop</h3>
-                <p className="text-sm text-gray-500 mb-2">or paste image from clipboard</p>
-                <p className="text-xs text-gray-400 flex items-center gap-1">
-                  Image or Video (max 100MB)
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </p>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 flex flex-col items-center justify-center text-center" onClick={handleClick} style={{
+                backgroundImage: imageUrl ? `url(${imageUrl})` : "none", // Set background image if selected
+                backgroundSize: "cover", // Ensure the image covers the whole div
+                backgroundPosition: "center", // Center the image
+                height: "300px", // Set a fixed height or use flex to auto adjust
+              }}>
+                {imageUrl && (
+                    <button
+                      className="text-white bg-black bg-opacity-50 rounded-full p-1"
+                      onClick={handleRemoveImage}
+                      aria-label="Remove Image"
+                    >
+                      <IoClose className="w-6 h-6" />
+                    </button>
+                )}
+                 {!imageUrl && (
+                    <>
+                      <CloudUpload className="w-12 h-12 text-gray-400 mb-4" />
+                      <h3 className="text-lg font-semibold mb-1 text-black">
+                        Click to upload or drag and drop
+                      </h3>
+                      <p className="text-sm text-gray-500 mb-2">or paste image from clipboard</p>
+                      <p className="text-xs text-gray-400 flex items-center gap-1">
+                        Image or Video (max 100MB)
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      </p>
+                    </>
+                  )}
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  style={{ display: "none" }}
+                  accept="image/*,video/*"
+                />
               </div>
             ) : (
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 flex flex-col items-center justify-center text-center">
