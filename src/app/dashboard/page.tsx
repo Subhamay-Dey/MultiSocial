@@ -142,7 +142,7 @@ export default function Component() {
             ) : (
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 flex flex-col items-center justify-center text-center">
                 <Grid className="w-12 h-12 text-gray-400 mb-4" />
-                <h3 className="text-lg font-semibold mb-1 ">Create a carousel post</h3>
+                <h3 className="text-lg font-semibold mb-1 text-black">Create a carousel post</h3>
                 <p className="text-sm text-gray-500">Upload multiple images or videos</p>
               </div>
             )}
