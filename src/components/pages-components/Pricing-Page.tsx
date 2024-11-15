@@ -37,20 +37,6 @@ export default function PricingSection() {
       route: "/checkout/premium"
     },
     {
-      title: "Enterprise",
-      description: "An enterprise plan with advanced features for large organizations",
-      price: 252400,
-      features: [
-        "Custom AI solutions",
-        "24/7 dedicated support",
-        "Unlimited projects",
-        "Access to all AI tools",
-        "Custom integrations",
-        "Data security and compliance"
-      ],
-      route: "/checkout/enterprise"
-    },
-    {
       title: "Ultimate",
       description: "The ultimate plan with all features for industry leaders",
       price: 336500,
@@ -88,7 +74,7 @@ export default function PricingSection() {
           </span>
         </div>
 
-        <div className="mt-16 grid gap-6 lg:grid-cols-4 lg:gap-8">
+        <div className="mt-16 grid gap-6 lg:grid-cols-3 lg:gap-20">
           {plans.map((plan) => (
             <Card
               key={plan.title}
