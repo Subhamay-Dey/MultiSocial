@@ -1,36 +1,38 @@
-import React from 'react'
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-  } from "@/components/ui/alert-dialog"
-  import { Button } from "@/components/ui/button"
+"use client"
+
 import { signIn } from 'next-auth/react'
 
-function TryFree({children}:{children:React.ReactNode}) {
+export default function TryFree({children}: {children: React.ReactNode}) {
   return (
-    <AlertDialog>
-      <AlertDialogTrigger>{children}</AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>You have to Sign In first!</AlertDialogTitle>
-          <AlertDialogDescription>
+    <>
+      <div onClick={() => (document.getElementById('sign_in_modal') as HTMLDialogElement)?.showModal()}>
+        {children}
+      </div>
+
+      <dialog id="sign_in_modal" className="modal">
+        <div className="modal-box">
+          <form method="dialog">
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+          </form>
+          
+          <h3 className="font-bold text-lg">You have to Sign In first!</h3>
+          <p className="py-4">
             To access the free trial period, you have to sign in to MultiSocial!
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() => signIn()}>Continue</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+          </p>
+          
+          <div className="modal-action">
+            <form method="dialog">
+              <button className="btn btn-ghost mr-2">Cancel</button>
+              <button 
+                className="btn btn-ghost" 
+                onClick={() => signIn()}
+              >
+                Continue
+              </button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+    </>
   )
 }
-
-export default TryFree

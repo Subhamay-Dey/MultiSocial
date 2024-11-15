@@ -1,10 +1,7 @@
 "use client"
 
-import { Switch } from "@/components/ui/switch";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Check } from "lucide-react";
 
 export default function PricingSection() {
   const router = useRouter();
@@ -53,22 +50,22 @@ export default function PricingSection() {
   ];
 
   return (
-    <div className="h-full bg-[url('/gb.png')] bg-center bg-cover">
+    <div className="h-full ">
       <div className="max-w-7xl mx-auto">
         
         <div className="text-center flex-col flex justify-center items-center">
           <h2 className="text-base font-semibold">Pricing</h2>
-          <h1 className="mt-3 text-4xl py-3 font-bold lg:text-6xl bg-gradient-to-b from-gray-900 via-black to-gray-f600 bg-clip-text text-transparent text-center">
+          <h1 className="mt-3 text-4xl py-3 font-bold lg:text-6xl">
             Simple pricing for everyone.
           </h1>
-          <p className="md:max-w-xl max-w-[375px] mt-5 px-3 bio text-[14px] lg:text-[18px] bg-gradient-to-b from-gray-900 via-black to-gray-600 bg-clip-text text-transparent">
+          <p className="md:max-w-xl max-w-[375px] mt-5 px-3 bio text-[14px] lg:text-[18px]">
             Choose an <span className="font-semibold">affordable plan</span> that's packed with the best features for engaging your audience, creating customer loyalty, and driving sales.
           </p>
         </div>
 
-        <div className="mt-8 flex justify-center items-center gap-3 bg-gradient-to-b from-gray-900 via-black to-gray-600 bg-clip-text text-transparent">
+        <div className="mt-8 flex justify-center items-center gap-3">
           <span>Annual</span>
-          <Switch />
+          <input type="checkbox" className="toggle toggle-accent" />
           <span className="inline-flex items-center rounded-full px-3 py-1 text-sm bg-amber-500/10 text-amber-500">
             2 MONTHS FREE 🎉
           </span>
@@ -76,35 +73,35 @@ export default function PricingSection() {
 
         <div className="mt-16 grid gap-6 lg:grid-cols-3 lg:gap-20">
           {plans.map((plan) => (
-            <Card
+            <div
               key={plan.title}
-              className={`relative bg-zinc-900 border-zinc-800 ${plan.highlight ? 'border-amber-500/50' : ''}`}
+              className={`card bg-base-100 shadow-xl ${plan.highlight ? 'border-2 border-accent' : ''}`}
             >
-              <CardHeader>
-                <CardTitle className="text-xl font-semibold">{plan.title}</CardTitle>
-                <p className="text-sm text-zinc-400">{plan.description}</p>
+              <div className="card-body">
+                <h2 className="card-title">{plan.title}</h2>
+                <p className="text-sm opacity-75">{plan.description}</p>
                 <div className="mt-4 flex items-baseline">
                   <span className="text-4xl font-bold">₹{plan.price / 100}</span>
-                  <span className="ml-1 text-zinc-400">one time</span>
+                  <span className="ml-1 opacity-75">one time</span>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <Button
-                  className="w-full bg-white text-black hover:bg-zinc-200"
+                
+                <button
+                  className="btn btn-success w-full mt-6"
                   onClick={() => router.push(plan.route)}
                 >
                   Subscribe
-                </Button>
+                </button>
+                
                 <ul className="mt-8 space-y-4">
                   {plan.features.map((feature) => (
                     <li key={feature} className="flex items-center gap-3">
-                      <Check className="h-5 w-5 text-emerald-500" />
-                      <span className="text-sm text-zinc-300">{feature}</span>
+                      <Check className="h-5 w-5 text-success" />
+                      <span className="text-sm opacity-75">{feature}</span>
                     </li>
                   ))}
                 </ul>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
       </div>
