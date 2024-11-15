@@ -3,6 +3,8 @@ import GithubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
 import TwitterProvider from "next-auth/providers/twitter";
 import LinkedInProvider from "next-auth/providers/linkedin";
+import InstagramProvider from "next-auth/providers/instagram";
+import FacebookProvider from "next-auth/providers/facebook";
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import prisma from '@/lib/prisma';
 
@@ -28,6 +30,15 @@ const authOptions: AuthOptions = {
     LinkedInProvider({
       clientId: process.env.LINKEDIN_ID!,
       clientSecret: process.env.LINKEDIN_SECRET!,
+    }),
+    InstagramProvider({
+      clientId: process.env.INSTAGRAM_ID!,
+      clientSecret: process.env.INSTAGRAM_SECRET!,
+    }),
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_ID!,
+      clientSecret: process.env.FACEBOOK_SECRET!,
+      allowDangerousEmailAccountLinking: true
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET!,

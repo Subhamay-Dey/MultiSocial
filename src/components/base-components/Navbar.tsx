@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Image from "next/image";
 import Link from "next/link";
@@ -21,6 +21,12 @@ import confetti from "canvas-confetti";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session?.user) {
+      console.log( session);
+    }
+  }, [session]);
 
   return (
     <nav className="absolute top-0 py-6 px-6 lg:px-10 flex justify-between items-center w-full z-10">
