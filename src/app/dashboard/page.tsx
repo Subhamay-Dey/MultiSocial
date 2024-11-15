@@ -53,6 +53,11 @@ export default function Component() {
               <span className="text-purple-800">Connect your social media accounts to start posting</span>
             </div>
             <button className="bg-gray-800 text-white text-sm rounded-md py-1 px-3">Connect Accounts</button>
+
+
+            <button onClick={() => setActiveView('accounts')} className="bg-gray-800 text-white text-sm rounded-md py-1 px-3">Connect Accounts</button>
+            <button className="btn btn-accent">Connect Accounts</button>
+
           </div>
             <div className="bg-white rounded-lg shadow-sm p-6">
               <h2 className="text-xl font-semibold mb-6 bg-gradient-to-b from-gray-900 via-black to-gray-600 bg-clip-text text-transparent">
