@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { useRef } from "react";
 import confetti from "canvas-confetti";
-import { ThemeToggle } from "../theme-toggle";
+
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,8 +32,7 @@ export default function Navbar() {
       </span>
 
       <div className="flex flex-row items-center gap-4">
-        {/* Theme Toggle */}
-        <ThemeToggle />
+ 
         
         <div className="hidden lg:flex gap-2">
           <button className="btn btn-ghost">Features</button>

@@ -41,53 +41,57 @@ export default function Component() {
       case 'new-post':
         return (
           <>
-            <div className="bg-green-50 border border-green-200 rounded-md p-4 mb-6 flex items-center justify-between">
+            <div className="bg-purple-100 border border-purple-300 rounded-md p-4 mb-6 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-500" viewBox="0 0 20 20" fill="currentColor">
                 <path
                   fillRule="evenodd"
                   d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
                   clipRule="evenodd"
                 />
               </svg>
-              <span className="text-green-800">Connect your social media accounts to start posting</span>
+              <span className="text-purple-800">Connect your social media accounts to start posting</span>
             </div>
-            <button className="btn btn-accent">Connect Accounts</button>
+            <button className="bg-gray-800 text-white text-sm rounded-md py-1 px-3">Connect Accounts</button>
           </div>
             <div className="bg-white rounded-lg shadow-sm p-6">
               <h2 className="text-xl font-semibold mb-6 bg-gradient-to-b from-gray-900 via-black to-gray-600 bg-clip-text text-transparent">
                 Create a post
               </h2>
               <div className="flex justify-center items-center border-b border-gray-200 mb-6">
-                <div className="tabs tabs-bordered">
-                  <button
-                    onClick={() => setActiveTab('single')}
-                    className={`tab ${activeTab === 'single' ? 'tab-active' : ''}`}
-                  >
-                    Single File
-                  </button>
-                  <button
-                    onClick={() => setActiveTab('text')}
-                    className={`tab ${activeTab === 'text' ? 'tab-active' : ''}`}
-                  >
-                    Text Post
-                  </button>
-                  <button
-                    onClick={() => setActiveTab('carousel')}
-                    className={`tab ${activeTab === 'carousel' ? 'tab-active' : ''}`}
-                  >
-                    Carousel
-                  </button>
-                </div>
+                <button
+                  onClick={() => setActiveTab('single')}
+                  className={`pb-2 px-8 font-medium ${
+                    activeTab === 'single' ? 'text-purple-500 border-b-2 border-purple-500' : 'text-gray-500'
+                  }`}
+                >
+                  Single File
+                </button>
+                <button
+                  onClick={() => setActiveTab('text')}
+                  className={`pb-2 px-8 font-medium ${
+                    activeTab === 'text' ? 'text-purple-500 border-b-2 border-purple-500' : 'text-gray-500'
+                  }`}
+                >
+                  Text Post
+                </button>
+                <button
+                  onClick={() => setActiveTab('carousel')}
+                  className={`pb-2 px-8 font-medium ${
+                    activeTab === 'carousel' ? 'text-purple-500 border-b-2 border-purple-500' : 'text-gray-500'
+                  }`}
+                >
+                  Carousel
+                </button>
               </div>
               {activeTab === 'text' ? (
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
                   <div className="relative">
                     <textarea
-                      className="textarea textarea-bordered w-full min-h-[200px]"
                       placeholder="Start writing your post here..."
                       value={postText}
                       onChange={(e) => setPostText(e.target.value)}
+                      className="w-full min-h-[200px] p-4 border-2 border-purple-300 hover:border-purple-400 rounded-lg text-black"
                       maxLength={2200}
                     />
                     <div className="absolute bottom-2 right-2 text-sm text-gray-400">{postText.length}/2200</div>
@@ -222,68 +226,70 @@ export default function Component() {
         <nav className="flex-1 overflow-y-auto p-6">
           <div className="border-b border-gray-200">
             <button
-              className="btn btn-accent w-full mb-6"
+              className="w-full bg-purple-500 text-white rounded-md py-2 px-4 flex items-center justify-center gap-2 mb-6"
               onClick={() => setActiveView('new-post')}
             >
-              <Plus className="w-5 h-5" />
+              <Plus className="w-5 h-10" />
               Create post
             </button>
           </div>
-          
-          <ul className="menu bg-base-200 rounded-box w-full">
-            <li>
-              <h2 className="menu-title">Content</h2>
-              <ul>
-                <li>
-                  <a 
-                    onClick={() => setActiveView('new-post')}
-                    className={activeView === 'new-post' ? 'active' : ''}
-                  >
-                    <FileText className="w-5 h-5" />
-                    New post
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    onClick={() => setActiveView('scheduled')}
-                    className={activeView === 'scheduled' ? 'active' : ''}
-                  >
-                    <Clock className="w-5 h-5" />
-                    Scheduled
-                  </a>
-                </li>
-                <li>
-                  <a 
-                    onClick={() => setActiveView('posts')}
-                    className={activeView === 'posts' ? 'active' : ''}
-                  >
-                    <Grid className="w-5 h-5" />
-                    Posts
-                  </a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-
-          <ul className="menu bg-base-200 rounded-box w-full mt-6">
-            <li>
-              <h2 className="menu-title">Configuration</h2>
-              <ul>
-                <li>
-                  <a 
-                    onClick={() => setActiveView('accounts')}
-                    className={activeView === 'accounts' ? 'active' : ''}
-                  >
-                    <Users className="w-5 h-5" />
-                    Accounts
-                  </a>
-                </li>
-              </ul>
-            </li>
-          </ul>
+          <div className="my-6">
+            <h2 className="text-xs font-semibold text-gray-500 mb-2">Content</h2>
+            <ul className="space-y-1">
+              <li>
+                <button
+                  onClick={() => setActiveView('new-post')}
+                  className={`flex items-center gap-3 w-full text-left py-2 px-3 rounded-md hover:bg-gray-100 ${
+                    activeView === 'new-post' ? 'bg-gray-100 text-purple-500' : 'text-gray-700'
+                  }`}
+                >
+                  <FileText className="w-5 h-5" />
+                  New post
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => setActiveView('scheduled')}
+                  className={`flex items-center gap-3 w-full text-left py-2 px-3 rounded-md hover:bg-gray-100 ${
+                    activeView === 'scheduled' ? 'bg-gray-100 text-purple-500' : 'text-gray-700'
+                  }`}
+                >
+                  <Clock className="w-5 h-5" />
+                  Scheduled
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => setActiveView('posts')}
+                  className={`flex items-center gap-3 w-full text-left py-2 px-3 rounded-md hover:bg-gray-100 ${
+                    activeView === 'posts' ? 'bg-gray-100 text-purple-500' : 'text-gray-700'
+                  }`}
+                >
+                  <Grid className="w-5 h-5" />
+                  Posts
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h2 className="text-xs font-semibold text-gray-500 mb-2 border-t border-gray-200 pt-6">Configuration</h2>
+            <ul className="space-y-1">
+              <li>
+                <button
+                  onClick={() => setActiveView('accounts')}
+                  className={`flex items-center gap-3 w-full text-left py-2 px-3 rounded-md hover:bg-gray-100 ${
+                    activeView === 'accounts' ? 'bg-gray-100 text-purple-500' : 'text-gray-700'
+                  }`}
+                >
+                  <Users className="w-5 h-5" />
+                  Accounts
+                </button>
+              </li>
+            </ul>
+          </div>
         </nav>
         {/* Posts left indicator */}
-        <div className="card bg-base-100 p-4">
+        <div className=" bg-white rounded-full flex flex-col gap-3 p-4">
           <div className="flex items-center gap-2">
             <svg className="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -301,34 +307,38 @@ export default function Component() {
                 strokeLinejoin="round"
               />
             </svg>
-            <span className="text-sm font-medium">5 posts left</span>
+            <span className="text-sm font-medium bg-gradient-to-b from-gray-900 via-black to-gray-600 bg-clip-text text-transparent">
+              5 posts left
+            </span>
           </div>
-          <progress className="progress progress-accent w-full" value="40" max="100"></progress>
+          <span className="w-full bg-purple-600 py-2 rounded-full"></span>
         </div>
         {/* Upgrade to premium */}
-        <div className="card bg-base-100 shadow-xl">
-          <div className="card-body">
-            <h3 className="card-title">Upgrade to premium</h3>
-            <p>Unlimited posting and scheduling for an unbeatable price.</p>
-            <div className="card-actions justify-end">
-              <button 
-                onClick={() => setActiveView('choose-plan')}
-                className="btn btn-accent btn-block"
-              >
-                Choose plan
-              </button>
-            </div>
+        <div className="w-full flex justify-center items-center pb-4">
+          <div className=" bg-white rounded-lg shadow-md p-4 w-56 border border-gray-200">
+            <h3 className="font-semibold mb-2 bg-gradient-to-b from-gray-900 via-black to-gray-600 bg-clip-text text-transparent">
+              Upgrade to premium
+            </h3>
+            <p className="text-sm text-gray-600 mb-4">Unlimited posting and scheduling for an unbeatable price.</p>
+            <button
+              onClick={() => setActiveView('choose-plan')}
+              className={`w-full bg-purple-500 text-white rounded-md py-2 px-4 text-sm font-medium`}
+            >
+              Choose plan
+            </button>
           </div>
         </div>
-        <div className="flex items-center gap-3 p-4">
-          <div className="avatar placeholder">
-            <div className="bg-neutral text-neutral-content rounded-full w-8">
-              <span>N</span>
+        <div className="p-4 border-t border-gray-200">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium text-gray-600">
+              N
             </div>
-          </div>
-          <div>
-            <p className="font-medium">{session?.user.name}</p>
-            <p className="text-xs opacity-70">Free Plan</p>
+            <div>
+              <p className="text-sm font-medium bg-gradient-to-b from-gray-900 via-black to-gray-600 bg-clip-text text-transparent">
+                {session?.user.name}
+              </p>
+              <p className="text-xs text-gray-500">Free Plan</p>
+            </div>
           </div>
         </div>
       </aside>
