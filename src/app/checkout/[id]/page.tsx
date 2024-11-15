@@ -78,7 +78,6 @@ const CheckoutPage = () => {
     }
 
     try {
-
       const amount = currency === "USD" ? priceUSD * 100 : priceINR * 100;
 
       const response = await fetch("/api/payment", {
@@ -124,10 +123,10 @@ const CheckoutPage = () => {
   };
 
   return price !== null ? (
-    <div className="min-h-screen bg-[url('/gb.png')] bg-center bg-cover flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <div className="max-w-6xl w-full h-full overflow-hidden flex flex-col md:flex-row">
         <div className="flex flex-col md:flex-row h-full gap-8 justify-center items-center">
-          <div className="md:w-1/2 relative h-full ">
+          <div className="md:w-1/2 relative h-full">
             <Image
               width={700}
               height={700}
@@ -143,26 +142,30 @@ const CheckoutPage = () => {
                 <span className="text-2xl font-bold">
                   {currency === 'USD' ? `$${priceUSD}` : `₹${priceINR}`}
                 </span>
-                <Select onValueChange={handleCurrencyChange} value={currency}>
-                  <SelectTrigger className="w-[100px]">
-                    <SelectValue placeholder="Currency" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="USD">USD</SelectItem>
-                    <SelectItem value="INR">INR</SelectItem>
-                  </SelectContent>
-                </Select>
+                <select 
+                  className="select select-bordered w-[100px]"
+                  value={currency}
+                  onChange={(e) => handleCurrencyChange(e.target.value)}
+                >
+                  <option value="USD">USD</option>
+                  <option value="INR">INR</option>
+                </select>
               </div>
             </div>
-            <Button className="w-full" size="lg" onClick={handlePayment}>
+            <button 
+              className="btn btn-success btn-lg w-full" 
+              onClick={handlePayment}
+            >
               Proceed to Checkout
-            </Button>
+            </button>
           </div>
         </div>
       </div>
     </div>
   ) : (
-    <p className="text-center mt-4">Loading...</p>
+    <div className="text-center mt-4">
+      <span className="loading loading-spinner loading-lg"></span>
+    </div>
   );
 };
 
