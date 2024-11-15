@@ -67,20 +67,20 @@ export default function PricingSection() {
   ];
 
   return (
-    <div className="min-h-screen p-4 bg-[url('/gb.png')] bg-center bg-cover">
-      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <div className="h-full bg-[url('/gb.png')] bg-center bg-cover">
+      <div className="max-w-7xl mx-auto">
         
         <div className="text-center flex-col flex justify-center items-center">
           <h2 className="text-base font-semibold">Pricing</h2>
-          <h1 className="mt-3 text-4xl py-3 font-bold lg:text-6xl bg-gradient-to-b from-gray-900 via-black to-gray-600 bg-clip-text text-transparent text-center dark:from-white dark:via-gray-200 dark:to-gray-400">
+          <h1 className="mt-3 text-4xl py-3 font-bold lg:text-6xl bg-gradient-to-b from-gray-900 via-black to-gray-f600 bg-clip-text text-transparent text-center">
             Simple pricing for everyone.
           </h1>
-          <p className="md:max-w-xl max-w-[375px] mt-5 px-3 bio text-[14px] lg:text-[18px]">
+          <p className="md:max-w-xl max-w-[375px] mt-5 px-3 bio text-[14px] lg:text-[18px] bg-gradient-to-b from-gray-900 via-black to-gray-600 bg-clip-text text-transparent">
             Choose an <span className="font-semibold">affordable plan</span> that's packed with the best features for engaging your audience, creating customer loyalty, and driving sales.
           </p>
         </div>
 
-        <div className="mt-8 flex justify-center items-center gap-3">
+        <div className="mt-8 flex justify-center items-center gap-3 bg-gradient-to-b from-gray-900 via-black to-gray-600 bg-clip-text text-transparent">
           <span>Annual</span>
           <Switch />
           <span className="inline-flex items-center rounded-full px-3 py-1 text-sm bg-amber-500/10 text-amber-500">

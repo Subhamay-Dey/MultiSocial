@@ -9,9 +9,8 @@ import { IoClose } from "react-icons/io5"
 import PricingSection from '@/components/pages-components/Pricing-Page'
 
 export default function Component() {
-  const [activeTab, setActiveTab] = useState('text')
+  const [activeTab, setActiveTab] = useState('single')
   const [postText, setPostText] = useState('')
-  const [showPricingPage, setShowPricingPage] = useState(false)
   const [activeView, setActiveView] = useState('new-post')
   const { data: session } = useSession()
 
