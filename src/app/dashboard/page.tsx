@@ -1,12 +1,25 @@
 'use client'
 
-import { CloudUpload, Clock, FileText, Grid, Menu, Plus, Settings, Users, X } from 'lucide-react'
+import { CloudUpload, Clock, FileText, Grid, Menu, Plus, Settings, Users, X, Loader2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { IoClose } from "react-icons/io5"
 import PricingSection from '@/components/pages-components/Pricing-Page'
+import { Button } from '@/components/ui/button'
+import { signIn } from 'next-auth/react'
+import { toast } from 'sonner'
+
+type ConnectedAccount = {
+  platform: string;
+  connected: boolean;
+  loading: boolean;
+  profileData?: {
+    name?: string;
+    profilePicture?: string;
+  };
+}
 
 export default function Component() {
   const [activeTab, setActiveTab] = useState('single')
@@ -16,6 +29,67 @@ export default function Component() {
 
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const [imageUrl, setImageUrl] = useState<string | null>(null)
+
+  const [connectedAccounts, setConnectedAccounts] = useState<ConnectedAccount[]>([
+    { platform: 'linkedin', connected: false, loading: false }
+  ]);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const success = urlParams.get('success');
+    const error = urlParams.get('error');
+
+    if (success) {
+      toast.success('Account connected successfully!');
+      setConnectedAccounts(prev => 
+        prev.map(account => 
+          account.platform === 'linkedin' 
+            ? { ...account, connected: true, loading: false }
+            : account
+        )
+      );
+    }
+    if (error) {
+      toast.error(`Failed to connect account: ${error}`);
+      setConnectedAccounts(prev => 
+        prev.map(account => ({ ...account, loading: false }))
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchLinkedInProfile = async () => {
+      try {
+        const response = await fetch('/api/oauth/linkedin/profile');
+        if (response.ok) {
+          const profileData = await response.json();
+          setConnectedAccounts(prev => 
+            prev.map(account => 
+              account.platform === 'linkedin' 
+                ? { 
+                    ...account, 
+                    connected: true, 
+                    loading: false,
+                    profileData: {
+                      name: profileData.name,
+                      profilePicture: profileData.profilePicture
+                    }
+                  }
+                : account
+            )
+          );
+        }
+      } catch (error) {
+        console.error('Error fetching LinkedIn profile:', error);
+      }
+    };
+
+    // Check if any account is connected but doesn't have profile data
+    const linkedInAccount = connectedAccounts.find(a => a.platform === 'linkedin');
+    if (linkedInAccount?.connected && !linkedInAccount?.profileData) {
+      fetchLinkedInProfile();
+    }
+  }, [connectedAccounts]);
 
   const handleClick = () => {
     if (fileInputRef.current) {
@@ -188,17 +262,122 @@ export default function Component() {
               Connected Accounts
             </h2>
             <div className="space-y-4">
-              {['Instagram', 'Twitter', 'YouTube', 'TikTok', 'Facebook', 'LinkedIn', 'Bluesky', 'Threads', 'Pinterest'].map(
-                (platform) => (
-                  <button
-                    key={platform}
-                    className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg flex items-center justify-between"
-                  >
-                    <span>Connect {platform}</span>
-                    <Plus className="w-5 h-5" />
-                  </button>
-                )
-              )}
+              {connectedAccounts.map((account) => (
+                <div 
+                  key={account.platform}
+                  className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 flex items-center justify-center bg-white rounded-full border border-gray-200 overflow-hidden">
+                      {account.connected && account.profileData?.profilePicture ? (
+                        <Image
+                          src={account.profileData.profilePicture}
+                          alt="LinkedIn Profile"
+                          width={40}
+                          height={40}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <Image
+                          src="/linkedin.png"
+                          alt="LinkedIn"
+                          width={24}
+                          height={24}
+                          className="opacity-75"
+                        />
+                      )}
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-gray-900">
+                        {account.connected && account.profileData?.name ? 
+                          account.profileData.name : 
+                          'LinkedIn'
+                        }
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        {account.connected ? 'Connected' : 'Not connected'}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {account.connected ? (
+                    <button
+                      onClick={async () => {
+                        try {
+                          setConnectedAccounts(prev => 
+                            prev.map(a => 
+                              a.platform === account.platform 
+                                ? { ...a, loading: true }
+                                : a
+                            )
+                          );
+                          
+                          const res = await fetch('/api/oauth/disconnect/linkedin', {
+                            method: 'POST',
+                          });
+                          
+                          if (!res.ok) throw new Error('Failed to disconnect');
+                          
+                          setConnectedAccounts(prev => 
+                            prev.map(a => 
+                              a.platform === account.platform 
+                                ? { ...a, connected: false, loading: false }
+                                : a
+                            )
+                          );
+                          toast.success('Account disconnected successfully!');
+                        } catch (error) {
+                          console.error('Failed to disconnect:', error);
+                          toast.error('Failed to disconnect account');
+                          setConnectedAccounts(prev => 
+                            prev.map(a => ({ ...a, loading: false }))
+                          );
+                        }
+                      }}
+                      className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                      disabled={account.loading}
+                    >
+                      {account.loading ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        'Disconnect'
+                      )}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setConnectedAccounts(prev => 
+                          prev.map(a => 
+                            a.platform === account.platform 
+                              ? { ...a, loading: true }
+                              : a
+                          )
+                        );
+                        const baseUrl = window.location.origin;
+                        const url = `https://www.linkedin.com/oauth/v2/authorization?${new URLSearchParams({
+                          response_type: 'code',
+                          client_id: '86nrfzff5nxcc5',
+                          redirect_uri: `${baseUrl}/api/oauth/linkedin`,
+                          state: 'random_state_string',
+                          scope: 'openid profile w_member_social email',
+                        })}`;
+                        window.location.href = url;
+                      }}
+                      className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      disabled={account.loading}
+                    >
+                      {account.loading ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <>
+                          <Plus className="w-4 h-4" />
+                          Connect
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         )

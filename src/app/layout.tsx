@@ -18,6 +18,7 @@ export default function RootLayout({
           <SessionProviderWrapper>
             {children}
           </SessionProviderWrapper>
+          <Toaster />
         </body>
       </html>
   );
