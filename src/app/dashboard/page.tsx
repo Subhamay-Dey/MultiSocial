@@ -335,7 +335,7 @@ export default function Component() {
             </div>
             <div>
               <p className="text-sm font-medium bg-gradient-to-b from-gray-900 via-black to-gray-600 bg-clip-text text-transparent">
-                {session?.user.name}
+                {session?.user?.name}
               </p>
               <p className="text-xs text-gray-500">Free Plan</p>
             </div>
