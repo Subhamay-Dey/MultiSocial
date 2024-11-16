@@ -11,7 +11,6 @@ export async function GET(req: NextRequest) {
       return NextResponse.redirect(new URL('/login', req.url));
     }
 
-    // Get user from database using email
     const user = await prisma.user.findUnique({
       where: {
         email: session.user.email
@@ -93,7 +92,58 @@ export async function GET(req: NextRequest) {
         });
       }
 
-      return NextResponse.redirect(new URL('/dashboard?success=true', req.url));
+      return NextResponse.redirect(new URL('/dashboard?success=true&platform=linkedin', req.url));
+    }
+    else if (platform === 'twitter') {
+      // Basic auth token
+      const basic = Buffer.from(
+        `${process.env.TWITTER_ID}:${process.env.TWITTER_SECRET}`
+      ).toString('base64');
+
+      try {
+        const tokenResponse = await fetch('https://api.twitter.com/2/oauth2/token', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Authorization: `Basic ${basic}`,
+          },
+          body: new URLSearchParams({
+            code: code!,
+            grant_type: 'authorization_code',
+            client_id: process.env.TWITTER_ID!,
+            redirect_uri: 'http://localhost:3000/api/oauth/twitter',
+            code_verifier: 'challenge',
+          }),
+        });
+
+        const data = await tokenResponse.json();
+        console.log('Twitter token response:', data);
+
+        if (!tokenResponse.ok) {
+          throw new Error(data.error_description || 'Failed to get access token');
+        }
+
+        // Store the token
+        await prisma.twitterAccount.upsert({
+          where: { userId: user.id },
+          update: {
+            accessToken: data.access_token,
+            expiresAt: new Date(Date.now() + (data.expires_in * 1000)),
+          },
+          create: {
+            userId: user.id,
+            accessToken: data.access_token,
+            expiresAt: new Date(Date.now() + (data.expires_in * 1000)),
+          },
+        });
+
+        return NextResponse.redirect(new URL('/dashboard?success=true&platform=twitter', req.url));
+      } catch (error) {
+        console.error('Twitter OAuth error:', error);
+        return NextResponse.redirect(
+          new URL(`/dashboard?error=${encodeURIComponent(error as string)}`, req.url)
+        );
+      }
     }
 
     return NextResponse.redirect(new URL('/dashboard?error=invalid_platform', req.url));
