@@ -10,6 +10,7 @@ import PricingSection from '@/components/pages-components/Pricing-Page'
 import { Button } from '@/components/ui/button'
 import { signIn } from 'next-auth/react'
 import { toast } from 'sonner'
+import { generateCodeVerifier } from '@/lib/pkce'
 
 type ConnectedAccount = {
   platform: string;
@@ -18,6 +19,7 @@ type ConnectedAccount = {
   profileData?: {
     name?: string;
     profilePicture?: string;
+    username?: string;  
   };
 }
 
@@ -31,23 +33,116 @@ export default function Component() {
   const [imageUrl, setImageUrl] = useState<string | null>(null)
 
   const [connectedAccounts, setConnectedAccounts] = useState<ConnectedAccount[]>([
-    { platform: 'linkedin', connected: false, loading: false }
+    { platform: 'linkedin', connected: false, loading: false },
+    { platform: 'twitter', connected: false, loading: false } 
   ]);
+
+  useEffect(() => {
+    const checkConnectedAccounts = async () => {
+      try {
+        // Check LinkedIn
+        const linkedinResponse = await fetch('/api/oauth/linkedin/profile');
+        const linkedinConnected = linkedinResponse.ok;
+        let linkedinData = null;
+        if (linkedinConnected) {
+          linkedinData = await linkedinResponse.json();
+        }
+
+        // Check Twitter
+        const twitterResponse = await fetch('/api/oauth/twitter/profile');
+        const twitterConnected = twitterResponse.ok;
+        let twitterData = null;
+        if (twitterConnected) {
+          twitterData = await twitterResponse.json();
+        }
+
+        // Update all accounts at once
+        setConnectedAccounts(prev => prev.map(account => {
+          if (account.platform === 'linkedin' && linkedinConnected) {
+            return {
+              ...account,
+              connected: true,
+              loading: false,
+              profileData: {
+                name: linkedinData.name,
+                profilePicture: linkedinData.profilePicture
+              }
+            };
+          }
+          if (account.platform === 'twitter' && twitterConnected) {
+            return {
+              ...account,
+              connected: true,
+              loading: false,
+              profileData: {
+                name: twitterData.name,
+                profilePicture: twitterData.profilePicture,
+                username: twitterData.username
+              }
+            };
+          }
+          return account;
+        }));
+
+      } catch (error) {
+        console.error('Error checking connected accounts:', error);
+      }
+    };
+
+    checkConnectedAccounts();
+  }, []); // Run only once on component mount
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const success = urlParams.get('success');
     const error = urlParams.get('error');
+    const platform = urlParams.get('platform');
 
-    if (success) {
+    if (success && platform) {
       toast.success('Account connected successfully!');
-      setConnectedAccounts(prev => 
-        prev.map(account => 
-          account.platform === 'linkedin' 
-            ? { ...account, connected: true, loading: false }
-            : account
-        )
-      );
+      setConnectedAccounts(prev => prev.map(account => 
+        account.platform === platform
+          ? { ...account, connected: true, loading: false }
+          : account // Keep other accounts unchanged
+      ));
+
+      // Fetch profile data for the newly connected account
+      if (platform === 'linkedin') {
+        fetch('/api/oauth/linkedin/profile')
+          .then(res => res.json())
+          .then(data => {
+            setConnectedAccounts(prev => prev.map(account => 
+              account.platform === 'linkedin'
+                ? {
+                    ...account,
+                    profileData: {
+                      name: data.name,
+                      profilePicture: data.profilePicture
+                    }
+                  }
+                : account
+            ));
+          })
+          .catch(console.error);
+      } else if (platform === 'twitter') {
+        fetch('/api/oauth/twitter/profile')
+          .then(res => res.json())
+          .then(data => {
+            setConnectedAccounts(prev => prev.map(account => 
+              account.platform === 'twitter'
+                ? {
+                    ...account,
+                    profileData: {
+                      name: data.name,
+                      profilePicture: data.profilePicture,
+                      username: data.username
+                    }
+                  }
+                : account
+            ));
+          })
+          .catch(console.error);
+      }
     }
     if (error) {
       toast.error(`Failed to connect account: ${error}`);
@@ -56,40 +151,6 @@ export default function Component() {
       );
     }
   }, []);
-
-  useEffect(() => {
-    const fetchLinkedInProfile = async () => {
-      try {
-        const response = await fetch('/api/oauth/linkedin/profile');
-        if (response.ok) {
-          const profileData = await response.json();
-          setConnectedAccounts(prev => 
-            prev.map(account => 
-              account.platform === 'linkedin' 
-                ? { 
-                    ...account, 
-                    connected: true, 
-                    loading: false,
-                    profileData: {
-                      name: profileData.name,
-                      profilePicture: profileData.profilePicture
-                    }
-                  }
-                : account
-            )
-          );
-        }
-      } catch (error) {
-        console.error('Error fetching LinkedIn profile:', error);
-      }
-    };
-
-    // Check if any account is connected but doesn't have profile data
-    const linkedInAccount = connectedAccounts.find(a => a.platform === 'linkedin');
-    if (linkedInAccount?.connected && !linkedInAccount?.profileData) {
-      fetchLinkedInProfile();
-    }
-  }, [connectedAccounts]);
 
   const handleClick = () => {
     if (fileInputRef.current) {
@@ -109,6 +170,103 @@ export default function Component() {
     e.stopPropagation()
     setImageUrl(null)
   }
+
+  const handleConnect = (platform: string) => {
+    setConnectedAccounts(prev => 
+      prev.map(a => 
+        a.platform === platform 
+          ? { ...a, loading: true }
+          : a
+      )
+    );
+
+    const baseUrl = window.location.origin;
+
+    if (platform === 'linkedin') {
+      const url = `https://www.linkedin.com/oauth/v2/authorization?${new URLSearchParams({
+        response_type: 'code',
+        client_id: '86nrfzff5nxcc5',
+        redirect_uri: `${baseUrl}/api/oauth/linkedin`,
+        state: 'random_state_string',
+        scope: 'openid profile w_member_social email',
+      })}`;
+      window.location.href = url;
+    } 
+    else if (platform === 'twitter') {
+      const url = 'https://twitter.com/i/oauth2/authorize';
+      const params = {
+        response_type: 'code',
+        client_id: 'UjFFcWw2WHN0OExjeEtUX2piQWY6MTpjaQ',
+        redirect_uri: 'http://localhost:3000/api/oauth/twitter',
+        scope: 'users.read tweet.read tweet.write',
+        state: 'state',
+        code_challenge: 'challenge',
+        code_challenge_method: 'plain'
+      };
+
+      const authUrl = `${url}?${new URLSearchParams(params)}`;
+      window.location.href = authUrl;
+    }
+  };
+
+  const handleDisconnect = async (platform: string) => {
+    try {
+      // Set loading state
+      setConnectedAccounts(prev => 
+        prev.map(a => 
+          a.platform === platform 
+            ? { ...a, loading: true }
+            : a
+        )
+      );
+
+      // Make the disconnect request
+      const response = await fetch(`/api/oauth/disconnect/${platform}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      // Parse the response
+      const data = await response.json();
+
+      // Check if the request was successful
+      if (!response.ok) {
+        throw new Error(data.error || `Failed to disconnect ${platform}`);
+      }
+
+      // Update state on success
+      setConnectedAccounts(prev => 
+        prev.map(a => 
+          a.platform === platform 
+            ? {
+                platform: a.platform,
+                connected: false,
+                loading: false,
+                profileData: undefined
+              }
+            : a
+        )
+      );
+
+      toast.success(`${platform.charAt(0).toUpperCase() + platform.slice(1)} disconnected successfully!`);
+
+    } catch (error) {
+      console.error(`Failed to disconnect ${platform}:`, error);
+      
+      // Reset loading state but keep connection status
+      setConnectedAccounts(prev => 
+        prev.map(a => 
+          a.platform === platform 
+            ? { ...a, loading: false }
+            : a
+        )
+      );
+      
+      toast.error(error as String || `Failed to disconnect ${platform}`);
+    }
+  };
 
   const renderContent = () => {
     switch (activeView) {
@@ -262,122 +420,81 @@ export default function Component() {
               Connected Accounts
             </h2>
             <div className="space-y-4">
-              {connectedAccounts.map((account) => (
-                <div 
-                  key={account.platform}
-                  className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 flex items-center justify-center bg-white rounded-full border border-gray-200 overflow-hidden">
-                      {account.connected && account.profileData?.profilePicture ? (
-                        <Image
-                          src={account.profileData.profilePicture}
-                          alt="LinkedIn Profile"
-                          width={40}
-                          height={40}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <Image
-                          src="/linkedin.png"
-                          alt="LinkedIn"
-                          width={24}
-                          height={24}
-                          className="opacity-75"
-                        />
-                      )}
-                    </div>
-                    <div>
-                      <h3 className="font-medium text-gray-900">
-                        {account.connected && account.profileData?.name ? 
-                          account.profileData.name : 
-                          'LinkedIn'
-                        }
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        {account.connected ? 'Connected' : 'Not connected'}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  {account.connected ? (
-                    <button
-                      onClick={async () => {
-                        try {
-                          setConnectedAccounts(prev => 
-                            prev.map(a => 
-                              a.platform === account.platform 
-                                ? { ...a, loading: true }
-                                : a
-                            )
-                          );
-                          
-                          const res = await fetch('/api/oauth/disconnect/linkedin', {
-                            method: 'POST',
-                          });
-                          
-                          if (!res.ok) throw new Error('Failed to disconnect');
-                          
-                          setConnectedAccounts(prev => 
-                            prev.map(a => 
-                              a.platform === account.platform 
-                                ? { ...a, connected: false, loading: false }
-                                : a
-                            )
-                          );
-                          toast.success('Account disconnected successfully!');
-                        } catch (error) {
-                          console.error('Failed to disconnect:', error);
-                          toast.error('Failed to disconnect account');
-                          setConnectedAccounts(prev => 
-                            prev.map(a => ({ ...a, loading: false }))
-                          );
-                        }
-                      }}
-                      className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                      disabled={account.loading}
-                    >
-                      {account.loading ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        'Disconnect'
-                      )}
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        setConnectedAccounts(prev => 
-                          prev.map(a => 
-                            a.platform === account.platform 
-                              ? { ...a, loading: true }
-                              : a
-                          )
-                        );
-                        const baseUrl = window.location.origin;
-                        const url = `https://www.linkedin.com/oauth/v2/authorization?${new URLSearchParams({
-                          response_type: 'code',
-                          client_id: '86nrfzff5nxcc5',
-                          redirect_uri: `${baseUrl}/api/oauth/linkedin`,
-                          state: 'random_state_string',
-                          scope: 'openid profile w_member_social email',
-                        })}`;
-                        window.location.href = url;
-                      }}
-                      className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                      disabled={account.loading}
-                    >
-                      {account.loading ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <>
-                          <Plus className="w-4 h-4" />
-                          Connect
-                        </>
-                      )}
-                    </button>
-                  )}
-                </div>
-              ))}
+            {connectedAccounts.map((account) => (
+  <div 
+    key={account.platform}
+    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200"
+  >
+    <div className="flex items-center gap-3">
+      <div className="w-10 h-10 flex items-center justify-center bg-white rounded-full border border-gray-200 overflow-hidden">
+        {account.connected && account.profileData?.profilePicture ? (
+          <Image
+            src={account.profileData.profilePicture}
+            alt={`${account.platform} Profile`}
+            width={40}
+            height={40}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <Image
+            src={`/${account.platform}.png`}
+            alt={account.platform}
+            width={24}
+            height={24}
+            className="opacity-75"
+          />
+        )}
+      </div>
+      <div>
+        <h3 className="font-medium text-gray-900">
+          {account.connected && account.profileData?.name ? 
+            <>
+              {account.profileData.name}
+              {account.platform === 'twitter' && account.profileData.username && (
+                <span className="text-sm text-gray-500 ml-1">
+                  @{account.profileData.username}
+                </span>
+              )}
+            </> : 
+            account.platform.charAt(0).toUpperCase() + account.platform.slice(1)
+          }
+        </h3>
+        <p className="text-sm text-gray-500">
+          {account.connected ? 'Connected' : 'Not connected'}
+        </p>
+      </div>
+    </div>
+    
+    {account.connected ? (
+      <button
+        onClick={() => handleDisconnect(account.platform)}
+        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100"
+        disabled={account.loading}
+      >
+        {account.loading ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          'Disconnect'
+        )}
+      </button>
+    ) : (
+      <button
+        onClick={() => handleConnect(account.platform)}
+        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+        disabled={account.loading}
+      >
+        {account.loading ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          <>
+            <Plus className="w-4 h-4" />
+            Connect
+          </>
+        )}
+      </button>
+    )}
+  </div>
+))}
             </div>
           </div>
         )
