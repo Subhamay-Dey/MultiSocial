@@ -15,8 +15,6 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { useRef } from "react";
-import confetti from "canvas-confetti";
-
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
