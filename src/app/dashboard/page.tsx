@@ -171,7 +171,6 @@ export default function Component() {
     setImageUrl(null)
   }
 
- main
   const handleConnect = (platform: string) => {
     setConnectedAccounts(prev => 
       prev.map(a => 
